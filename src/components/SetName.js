@@ -1,4 +1,4 @@
-import styles from "../styles/Home.module.css";
+import styles from "./SetName.module.css";
 
 export default function SetName({ onSubmit }) {
   return (

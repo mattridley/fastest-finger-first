@@ -11,6 +11,27 @@ a {
   text-decoration: none;
 }
 
+button {
+  color: gold;
+  border: none;
+  background-color: rebeccapurple;
+  border-radius: 10px;
+}
+
+button:hover {
+  background-color: mediumpurple;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: darkblue;
+  cursor: not-allowed;
+}
+
+h1 {
+  text-align: center;
+}
+
 * {
   box-sizing: border-box;
 }
