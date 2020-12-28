@@ -193,7 +193,7 @@ export default function Admin() {
     <>
       <div>
         {Object.entries(players).map(([name, data]) => {
-          const { id, duration, answer } = data ?? {};
+          const { id, duration, answer } = data || {};
           return (
             <>
               <div>{name}</div>

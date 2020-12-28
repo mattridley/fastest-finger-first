@@ -14,8 +14,7 @@ const pusher = new Pusher({
 
 export default function SendCommand(req, res) {
   const { event, ...data } = req.body;
-  console.log(config);
-  pusher.trigger("fastest-finger-first", event, data ?? 'clear');
+  pusher.trigger("fastest-finger-first", event, data || "clear");
 
   res.send(200);
 }

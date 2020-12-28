@@ -24,7 +24,7 @@ export default function Answer({ options, userAnswer, correctAnswer }) {
         </div>
         <div className={s.correctAnswer}>
           <h3>Correct Answer</h3>
-          {(correctAnswer ?? []).map((option) => (
+          {(correctAnswer || []).map((option) => (
             <div key={option}>
               {option.toUpperCase()}: {options[option]}
             </div>
