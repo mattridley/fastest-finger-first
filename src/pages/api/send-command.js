@@ -12,9 +12,12 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
-export default function SendCommand(req, res) {
+export default async function SendCommand(req, res) {
   const { event, ...data } = req.body;
-  pusher.trigger("fastest-finger-first", event, data || "clear");
-
-  res.send(200);
+  res.send(201);
+  try {
+    await pusher.trigger("fastest-finger-first", event, data || "clear");
+  } catch (e) {
+    console.error(e);
+  }
 }
