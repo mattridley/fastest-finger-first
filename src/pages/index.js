@@ -4,6 +4,7 @@ import produce from "immer";
 
 import styles from "../styles/Home.module.css";
 
+import Answer from "../components/Answer";
 import Question from "../components/Question";
 import SetName from "../components/SetName";
 import { usePusherChannel } from "../hooks/usePusher";
@@ -19,7 +20,7 @@ const initialState = {
 
 export default function Home() {
   const [
-    { name, state, question, options, showOptions, userAnswer },
+    { name, state, question, options, showOptions, userAnswer, correctAnswer },
     dispatch,
   ] = React.useReducer(
     produce((draft, action) => {
@@ -33,10 +34,16 @@ export default function Home() {
         case "new-question":
           Object.assign(draft, action.payload, { state: "asking-question" });
           break;
-        case "set-user-answer":
+        case "user-answer":
           Object.assign(draft, {
             userAnswer: action.payload,
             state: "question-answered",
+          });
+          break;
+          break;
+        case "correct-answer":
+          Object.assign(draft, {
+            correctAnswer: action.payload,
           });
           break;
         case "clear-question":
@@ -91,7 +98,7 @@ export default function Home() {
           showOptions={showOptions}
           onSubmit={(ans) =>
             dispatch({
-              type: "set-user-answer",
+              type: "user-answer",
               payload: ans,
             })
           }
@@ -100,14 +107,11 @@ export default function Home() {
       break;
     case "question-answered":
       content = (
-        <>
-          <h2 className={styles.duration}>{userAnswer.duration / 1000}s</h2>
-          <div>
-            {userAnswer.answer.map((option) => (
-              <div>{option.toUpperCase()}: {options[option]}</div>
-            ))}
-          </div>
-        </>
+        <Answer
+          options={options}
+          userAnswer={userAnswer}
+          correctAnswer={correctAnswer}
+        />
       );
       break;
   }

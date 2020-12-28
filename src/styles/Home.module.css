@@ -121,16 +121,6 @@
   }
 }
 
-.duration {
-  animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-  50% {
-    opacity: 0;
-  }
-}
-
 .form {
   display: flex;
   flex-direction: column;
