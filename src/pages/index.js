@@ -45,7 +45,7 @@ export default function Home() {
         case "new-question":
           Object.assign(draft, action.payload, { state: "asking-question" });
           break;
-        case "user-answer":
+        case "set-user-answer":
           Object.assign(draft, {
             userAnswer: action.payload,
             state: "question-answered",
@@ -111,7 +111,7 @@ export default function Home() {
           showOptions={showOptions}
           onSubmit={(ans) => {
             dispatch({
-              type: "user-answer",
+              type: "set-user-answer",
               payload: ans,
             });
             fetch("/api/send-command", {
