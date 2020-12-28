@@ -73,6 +73,53 @@ const questions = [
     },
     correctAnswer: ["c", "a", "d", "b"],
   },
+  {
+    id: 6,
+    question:
+      "Starting with the fewest, put these creatures in order according to the number of legs they have?",
+    options: {
+      a: "Antelope",
+      b: "Beetle",
+      c: "Ostrich",
+      d: "Spider",
+    },
+    correctAnswer: ["c", "a", "b", "d"],
+  },
+  {
+    id: 7,
+    question: "Put these food related terms in alphabetical order",
+    options: {
+      a: "Bhuna",
+      b: "Balti",
+      c: "Bhaji",
+      d: "Biryani",
+    },
+    correctAnswer: ["b", "c", "a", "d"],
+  },
+  {
+    id: 8,
+    question:
+      "Put the following four gifts in 'The Twelve Days of Christmas' in order of quantity (per verse), from most to least",
+    options: {
+      a: "Drummers Drumming",
+      b: "Golden Rings",
+      c: "Ladies Dancing",
+      d: "Pipers Piping",
+    },
+    correctAnswer: ["b", "a", "d", "c"],
+  },
+  {
+    id: 9,
+    question:
+      "Put the following four letters in order of Roman Numeral value, from least to greatest",
+    options: {
+      a: "C",
+      b: "D",
+      c: "L",
+      d: "M",
+    },
+    correctAnswer: ["c", "a", "b", "d"],
+  },
 ];
 
 const initialState = {
@@ -152,23 +199,28 @@ export default function Admin() {
               <div>{name}</div>
               {duration && <div>{duration / 1000}s</div>}
               {answer && (
-                <div>
-                  {answer.map((option, idx) => (
-                    <span
-                      style={{
-                        color: option === questions[id].correctAnswer[idx] ? 'green' : 'red',
-                      }}
-                    >
-                      {questions[id].options[option]},
-                    </span>
-                  ))}
-                </div>
+                <>
+                  <div>
+                    {answer.map((option, idx) => (
+                      <span
+                        style={{
+                          color:
+                            option === questions[id].correctAnswer[idx]
+                              ? "green"
+                              : "red",
+                        }}
+                      >
+                        {questions[id].options[option]},
+                      </span>
+                    ))}
+                  </div>
+                  <hr />
+                </>
               )}
             </>
           );
         })}
       </div>
-      <hr />
       {questions.map(({ id, question, options, correctAnswer }) => (
         <div key={id} style={{ opacity: doneQuestions.includes(id) ? 0.5 : 1 }}>
           <h3>Q{id + 1}</h3>
