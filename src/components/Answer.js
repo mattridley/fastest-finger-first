@@ -9,6 +9,7 @@ export default function Answer({ options, userAnswer, correctAnswer }) {
           <h3>Your Answer</h3>
           {userAnswer.answer.map((option, idx) => (
             <div
+              key={option}
               style={{
                 color: correctAnswer
                   ? correctAnswer[idx] === option
@@ -24,7 +25,7 @@ export default function Answer({ options, userAnswer, correctAnswer }) {
         <div className={s.correctAnswer}>
           <h3>Correct Answer</h3>
           {(correctAnswer ?? []).map((option) => (
-            <div>
+            <div key={option}>
               {option.toUpperCase()}: {options[option]}
             </div>
           ))}

@@ -16,6 +16,7 @@ const initialState = {
   options: null,
   showOptions: false,
   userAnswer: null,
+  correctAnswer: null,
 };
 
 export default function Home() {
@@ -42,9 +43,7 @@ export default function Home() {
           break;
           break;
         case "correct-answer":
-          Object.assign(draft, {
-            correctAnswer: action.payload,
-          });
+          draft.correctAnswer = action.payload.correctAnswer;
           break;
         case "clear-question":
           Object.assign(draft, initialState, {

@@ -1,8 +1,11 @@
 import Pusher from "pusher-js";
 import * as React from "react";
+import getConfig from "next/config";
 
-const pusher = new Pusher("ec26b229afe9fbf00ab0", {
-  cluster: "eu",
+const config = Object.assign({}, getConfig().publicRuntimeConfig.pusher);
+
+const pusher = new Pusher(config.key, {
+  cluster: config.cluster,
 });
 
 const channelSubscriptions = new Map();
