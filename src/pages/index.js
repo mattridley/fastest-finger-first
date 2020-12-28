@@ -10,6 +10,7 @@ import SetName from "../components/SetName";
 import { usePusherChannel } from "../hooks/usePusher";
 
 const initialState = {
+  id: null,
   name: null,
   state: "set-name",
   question: null,
@@ -21,7 +22,16 @@ const initialState = {
 
 export default function Home() {
   const [
-    { name, state, question, options, showOptions, userAnswer, correctAnswer },
+    {
+      name,
+      state,
+      id,
+      question,
+      options,
+      showOptions,
+      userAnswer,
+      correctAnswer,
+    },
     dispatch,
   ] = React.useReducer(
     produce((draft, action) => {
@@ -69,7 +79,6 @@ export default function Home() {
     (evt, data) => dispatch({ type: evt, payload: data }),
     [dispatch]
   );
-
   usePusherChannel("fastest-finger-first", handlePusherMessage);
 
   let content = null;
@@ -77,12 +86,17 @@ export default function Home() {
     case "set-name":
       content = (
         <SetName
-          onSubmit={(name) =>
+          onSubmit={(name) => {
             dispatch({
               type: "set-name",
               payload: { name },
-            })
-          }
+            });
+            fetch("/api/send-command", {
+              method: "post",
+              body: JSON.stringify({ event: "new-player", name }),
+              headers: { "content-type": "application/json" },
+            });
+          }}
         />
       );
       break;
@@ -95,12 +109,17 @@ export default function Home() {
           question={question}
           options={options}
           showOptions={showOptions}
-          onSubmit={(ans) =>
+          onSubmit={(ans) => {
             dispatch({
               type: "user-answer",
               payload: ans,
-            })
-          }
+            });
+            fetch("/api/send-command", {
+              method: "post",
+              body: JSON.stringify({ event: "user-answer", id, name, ...ans }),
+              headers: { "content-type": "application/json" },
+            });
+          }}
         />
       );
       break;

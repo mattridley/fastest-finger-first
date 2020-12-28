@@ -1,3 +1,5 @@
+import * as React from "react";
+import produce from "immer";
 import { usePusherChannel } from "../hooks/usePusher";
 
 const questions = [
@@ -73,8 +75,38 @@ const questions = [
   },
 ];
 
+const initialState = {
+  doneQuestions: [],
+  players: {},
+};
+
 export default function Admin() {
-  const handlePusherMessage = () => {};
+  const [{ doneQuestions, players }, dispatch] = React.useReducer(
+    produce((draft, action) => {
+      switch (action.type) {
+        case "question-cleared":
+          draft.doneQuestions.push(action.payload.id);
+          draft.players = Object.entries(draft.players).reduce(
+            (players, [name]) => ({ ...players, [name]: null }),
+            {}
+          );
+          break;
+        case "user-answer":
+          draft.players[action.payload.name] = action.payload;
+          break;
+          break;
+        case "new-player":
+          draft.players[action.payload.name] = null;
+          break;
+      }
+    }, initialState),
+    initialState
+  );
+
+  const handlePusherMessage = React.useCallback(
+    (evt, data) => dispatch({ type: evt, payload: data }),
+    [dispatch]
+  );
   usePusherChannel("fastest-finger-first", handlePusherMessage);
 
   const clearQuestion = (id) => {
@@ -85,6 +117,7 @@ export default function Admin() {
         "content-type": "application/json",
       },
     });
+    dispatch({ type: "question-cleared", payload: { id } });
   };
 
   const sendQuestion = (id) => {
@@ -111,8 +144,33 @@ export default function Admin() {
 
   return (
     <>
+      <div>
+        {Object.entries(players).map(([name, data]) => {
+          const { id, duration, answer } = data ?? {};
+          return (
+            <>
+              <div>{name}</div>
+              {duration && <div>{duration / 1000}s</div>}
+              {answer && (
+                <div>
+                  {answer.map((option, idx) => (
+                    <span
+                      style={{
+                        color: option === questions[id].correctAnswer[idx] ? 'green' : 'red',
+                      }}
+                    >
+                      {questions[id].options[option]},
+                    </span>
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })}
+      </div>
+      <hr />
       {questions.map(({ id, question, options, correctAnswer }) => (
-        <div key={id}>
+        <div key={id} style={{ opacity: doneQuestions.includes(id) ? 0.5 : 1 }}>
           <h3>Q{id + 1}</h3>
           <p>{question}</p>
           <p>
@@ -123,7 +181,7 @@ export default function Admin() {
           <div>
             <button onClick={() => sendQuestion(id)}>Send Question</button>
             <button onClick={() => sendAnswer(id)}>Send Answer</button>
-            <button onClick={clearQuestion}>Clear Question</button>
+            <button onClick={() => clearQuestion(id)}>Clear Question</button>
           </div>
           <hr />
         </div>
